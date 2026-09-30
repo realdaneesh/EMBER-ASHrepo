@@ -1,13 +1,61 @@
-body {
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+:root {
+  --color-bg:          #0d0b09;
+  --color-surface:     #161210;
+  --color-surface2:    #1e1a16;
+  --color-surface3:    #2a231c;
+  --color-amber:       #d97706;
+  --color-amber-light: #f59e0b;
+  --color-amber-glow:  #fbbf24;
+  --color-red:         #b91c1c;
+  --color-cream:       #f5f0e8;
+  --color-muted:       #8a7d6b;
+  --color-border:      rgba(217, 119, 6, 0.18);
+  --font-display:      'Playfair Display', serif;
+  --font-body:         'Inter', sans-serif;
+  --radius-card:       16px;
+  --shadow-card:       0 8px 40px rgba(0,0,0,0.55);
+  --shadow-glow:       0 0 40px rgba(217,119,6,0.20);
+  --transition:        0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-cream);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+::selection {
+  background: rgba(217, 119, 6, 0.35);
+  color: #fff;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--color-bg); }
+::-webkit-scrollbar-thumb { background: var(--color-amber); border-radius: 999px; }
