@@ -1,0 +1,544 @@
+{
+  "_meta": {
+    "database": "ember_and_ash_db",
+    "version": "1.0.0",
+    "format": "MongoDB Extended JSON v2",
+    "createdAt": {
+      "$date": "2026-10-06T08:52:00.000Z"
+    },
+    "description": "Primary MongoDB database document for Ember & Ash Restaurant & Bar"
+  },
+  "restaurant_profile": {
+    "_id": {
+      "$oid": "66f4a101b7a1230001000001"
+    },
+    "name": "Ember & Ash",
+    "tagline": "Wood-Fired & Charcoal Dining",
+    "cuisine": ["Wood-Fired Grills", "Slow-Cooked Curries", "Artisanal Charcoal Specialties"],
+    "address": {
+      "venue": "The Mills",
+      "street": "Senapati Bapat Marg",
+      "locality": "Lower Parel",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "postalCode": "400013",
+      "country": "India"
+    },
+    "contact": {
+      "phone": "+91 (022) 6789 4500",
+      "email": "mumbai@emberandash.com",
+      "website": "https://emberandash.com"
+    },
+    "currency": "INR",
+    "currencySymbol": "₹",
+    "gstPercentage": 5,
+    "operatingHours": [
+      { "day": "Monday", "opens": null, "closes": null, "isClosed": true },
+      { "day": "Tuesday", "opens": "17:00", "closes": "22:00", "isClosed": false },
+      { "day": "Wednesday", "opens": "17:00", "closes": "22:00", "isClosed": false },
+      { "day": "Thursday", "opens": "17:00", "closes": "22:00", "isClosed": false },
+      { "day": "Friday", "opens": "16:00", "closes": "23:30", "isClosed": false },
+      { "day": "Saturday", "opens": "16:00", "closes": "23:30", "isClosed": false },
+      { "day": "Sunday", "opens": "12:00", "closes": "21:00", "isClosed": false }
+    ]
+  },
+  "categories": [
+    {
+      "_id": { "$oid": "66f4a102b7a1230002000001" },
+      "categoryId": "cat_starters",
+      "name": "Starters",
+      "slug": "starters",
+      "displayOrder": 1,
+      "isActive": true
+    },
+    {
+      "_id": { "$oid": "66f4a102b7a1230002000002" },
+      "categoryId": "cat_chicken",
+      "name": "Chicken",
+      "slug": "chicken",
+      "displayOrder": 2,
+      "isActive": true
+    },
+    {
+      "_id": { "$oid": "66f4a102b7a1230002000003" },
+      "categoryId": "cat_goat",
+      "name": "Goat",
+      "slug": "goat",
+      "displayOrder": 3,
+      "isActive": true
+    },
+    {
+      "_id": { "$oid": "66f4a102b7a1230002000004" },
+      "categoryId": "cat_veg",
+      "name": "Vegetarian",
+      "slug": "vegetarian",
+      "displayOrder": 4,
+      "isActive": true
+    },
+    {
+      "_id": { "$oid": "66f4a102b7a1230002000005" },
+      "categoryId": "cat_drinks",
+      "name": "Beverages & Cocktails",
+      "slug": "beverages",
+      "displayOrder": 5,
+      "isActive": true
+    }
+  ],
+  "dishes": [
+    {
+      "_id": { "$oid": "66f4a103b7a1230003000001" },
+      "dishId": 1,
+      "name": "Seasoned Crispy Fries",
+      "price": "₹290",
+      "priceNum": 290,
+      "desc": "Golden crispy fries tossed in our signature seasoning blend — paprika, garlic, herbs — served with smoky chipotle dip.",
+      "image": "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=600&auto=format&fit=crop",
+      "badge": "Fan Favourite",
+      "ingredients": ["Russet Potatoes", "Paprika", "Garlic Powder", "Sea Salt", "Chipotle Dip"],
+      "rating": 4.8,
+      "reviews": 541,
+      "category": "Starters",
+      "isAvailable": true,
+      "isVegetarian": true
+    },
+    {
+      "_id": { "$oid": "66f4a103b7a1230003000002" },
+      "dishId": 2,
+      "name": "Loaded Onion Rings",
+      "price": "₹340",
+      "priceNum": 340,
+      "desc": "Beer-battered thick-cut onion rings fried to a perfect crunch, served with honey mustard and ranch dipping sauces.",
+      "image": "https://images.unsplash.com/photo-1639024471283-03518883512d?w=600&auto=format&fit=crop",
+      "badge": "Crispy",
+      "ingredients": ["Sweet Onions", "Beer Batter", "Breadcrumbs", "Honey Mustard", "Ranch Sauce"],
+      "rating": 4.7,
+      "reviews": 312,
+      "category": "Starters",
+      "isAvailable": true,
+      "isVegetarian": true
+    },
+    {
+      "_id": { "$oid": "66f4a103b7a1230003000003" },
+      "dishId": 3,
+      "name": "Corn & Jalapeño Fritters",
+      "price": "₹380",
+      "priceNum": 380,
+      "desc": "Crispy golden fritters packed with sweet corn, jalapeño and cheddar, served with sour cream and sweet chilli sauce.",
+      "image": "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=600&auto=format&fit=crop",
+      "badge": "Vegetarian",
+      "ingredients": ["Sweet Corn", "Jalapeño", "Cheddar", "Sour Cream", "Sweet Chilli"],
+      "rating": 4.6,
+      "reviews": 198,
+      "category": "Starters",
+      "isAvailable": true,
+      "isVegetarian": true
+    },
+    {
+      "_id": { "$oid": "66f4a103b7a1230003000004" },
+      "dishId": 4,
+      "name": "Chicken Soup",
+      "price": "₹320",
+      "priceNum": 320,
+      "desc": "Rich slow-simmered chicken broth with shredded tender chicken, fresh vegetables, and warm crusty garlic bread on the side.",
+      "image": "https://images.unsplash.com/photo-1547592180-85f173990554?w=600&auto=format&fit=crop",
+      "badge": "Comfort Pick",
+      "ingredients": ["Whole Chicken", "Carrots", "Celery", "Onion", "Fresh Herbs", "Garlic Bread"],
+      "rating": 4.7,
+      "reviews": 276,
+      "category": "Starters",
+      "isAvailable": true,
+      "isVegetarian": false
+    },
+    {
+      "_id": { "$oid": "66f4a103b7a1230003000005" },
+      "dishId": 5,
+      "name": "Flame-Grilled Half Chicken",
+      "price": "₹690",
+      "priceNum": 690,
+      "desc": "Marinated half chicken grilled over hardwood coals — smoky, juicy, and charred to perfection. Served with roasted spiced potatoes.",
+      "image": "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=600&auto=format&fit=crop",
+      "badge": "Chef's Pick",
+      "ingredients": ["Free-Range Chicken", "Lemon Marinade", "Garlic", "Rosemary", "Roasted Potatoes"],
+      "rating": 4.9,
+      "reviews": 389,
+      "category": "Chicken",
+      "isAvailable": true,
+      "isVegetarian": false
+    },
+    {
+      "_id": { "$oid": "66f4a103b7a1230003000006" },
+      "dishId": 6,
+      "name": "Southern Crispy Fried Chicken",
+      "price": "₹620",
+      "priceNum": 620,
+      "desc": "Juicy chicken coated in a crunchy seasoned crust, double-fried for maximum crispiness. Served with hot honey drizzle and coleslaw.",
+      "image": "https://images.unsplash.com/photo-1562967914-608f82629710?w=600&auto=format&fit=crop",
+      "badge": "Most Ordered",
+      "ingredients": ["Bone-In Chicken", "Buttermilk Brine", "Spiced Crust", "Hot Honey", "Coleslaw"],
+      "rating": 4.9,
+      "reviews": 621,
+      "category": "Chicken",
+      "isAvailable": true,
+      "isVegetarian": false
+    },
+    {
+      "_id": { "$oid": "66f4a103b7a1230003000007" },
+      "dishId": 7,
+      "name": "Chicken Tikka Skewers",
+      "price": "₹580",
+      "priceNum": 580,
+      "desc": "Tender chicken pieces marinated in Kashmiri chillies and spiced yoghurt, skewered and fired in our tandoor. Served with mint chutney.",
+      "image": "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=600&auto=format&fit=crop",
+      "badge": "Spicy 🌶️",
+      "ingredients": ["Chicken Breast", "Yoghurt Marinade", "Tandoori Spices", "Mint Chutney", "Butter Naan"],
+      "rating": 4.8,
+      "reviews": 445,
+      "category": "Chicken",
+      "isAvailable": true,
+      "isVegetarian": false
+    },
+    {
+      "_id": { "$oid": "66f4a103b7a1230003000008" },
+      "dishId": 8,
+      "name": "BBQ Chicken Burger",
+      "price": "₹520",
+      "priceNum": 520,
+      "desc": "Smoky BBQ chicken thigh fillet with melted Swiss cheese, lettuce, tomato, house pickles and garlic aioli on a toasted brioche bun.",
+      "image": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&auto=format&fit=crop",
+      "badge": "New",
+      "ingredients": ["Chicken Thigh", "Swiss Cheese", "Smoky BBQ", "Brioche Bun", "Garlic Aioli"],
+      "rating": 4.7,
+      "reviews": 203,
+      "category": "Chicken",
+      "isAvailable": true,
+      "isVegetarian": false
+    },
+    {
+      "_id": { "$oid": "66f4a103b7a1230003000009" },
+      "dishId": 9,
+      "name": "Slow-Cooked Goat Curry",
+      "price": "₹890",
+      "priceNum": 890,
+      "desc": "Melt-in-your-mouth goat slow-braised in hand-ground aromatic spices for 6 hours. Served in a clay handi with butter naan.",
+      "image": "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&auto=format&fit=crop",
+      "badge": "Chef's Pick",
+      "ingredients": ["Young Goat", "Hand-Ground Spices", "Tomato Onion Gravy", "Butter Naan", "Basmati Rice"],
+      "rating": 5.0,
+      "reviews": 287,
+      "category": "Goat",
+      "isAvailable": true,
+      "isVegetarian": false
+    },
+    {
+      "_id": { "$oid": "66f4a103b7a1230003000010" },
+      "dishId": 10,
+      "name": "Grilled Goat Chops",
+      "price": "₹980",
+      "priceNum": 980,
+      "desc": "Thick-cut goat chops rubbed with roasted cumin and crushed peppercorns, flame-seared and served with spiced mint glaze.",
+      "image": "https://images.unsplash.com/photo-1544025162-d76694265947?w=600&auto=format&fit=crop",
+      "badge": "Signature",
+      "ingredients": ["Goat Chops", "Roasted Cumin Rub", "Crushed Peppercorns", "Charcoal Flame", "Mint Glaze"],
+      "rating": 4.9,
+      "reviews": 164,
+      "category": "Goat",
+      "isAvailable": true,
+      "isVegetarian": false
+    },
+    {
+      "_id": { "$oid": "66f4a103b7a1230003000011" },
+      "dishId": 11,
+      "name": "Paneer Tikka Platter",
+      "price": "₹480",
+      "priceNum": 480,
+      "desc": "Creamy cubes of fresh malai paneer marinated in spiced hung curd, charred over live charcoal. Served with roasted peppers & chutney.",
+      "image": "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=600&auto=format&fit=crop",
+      "badge": "Vegetarian",
+      "ingredients": ["Fresh Malai Paneer", "Spiced Hung Curd", "Bell Peppers", "Onions", "Mint Chutney"],
+      "rating": 4.8,
+      "reviews": 312,
+      "category": "Vegetarian",
+      "isAvailable": true,
+      "isVegetarian": true
+    },
+    {
+      "_id": { "$oid": "66f4a103b7a1230003000012" },
+      "dishId": 12,
+      "name": "Garden Veggie Burger",
+      "price": "₹450",
+      "priceNum": 450,
+      "desc": "Smoky grilled black bean and mushroom patty with avocado, crisp lettuce, heirloom tomato and spicy mayo on a toasted sesame bun.",
+      "image": "https://images.unsplash.com/photo-1520072959219-c595dc870360?w=600&auto=format&fit=crop",
+      "badge": "Plant-Based",
+      "ingredients": ["Black Bean Patty", "Portobello Mushroom", "Avocado", "Spicy Mayo", "Sesame Bun"],
+      "rating": 4.6,
+      "reviews": 189,
+      "category": "Vegetarian",
+      "isAvailable": true,
+      "isVegetarian": true
+    },
+    {
+      "_id": { "$oid": "66f4a103b7a1230003000013" },
+      "dishId": 13,
+      "name": "Creamy Dal Makhani",
+      "price": "₹420",
+      "priceNum": 420,
+      "desc": "Slow-simmered black lentils simmered overnight in a velvety tomato and butter reduction with fresh cream. Served with garlic butter naan.",
+      "image": "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=600&auto=format&fit=crop",
+      "badge": "Vegetarian",
+      "ingredients": ["Black Lentils", "Slow Cooked", "Cultured Butter", "Fresh Cream", "Garlic Butter Naan"],
+      "rating": 4.7,
+      "reviews": 243,
+      "category": "Vegetarian",
+      "isAvailable": true,
+      "isVegetarian": true
+    }
+  ],
+  "tables": [
+    {
+      "_id": { "$oid": "66f4a104b7a1230004000001" },
+      "tableNumber": 1,
+      "capacity": 2,
+      "section": "Main Dining Room",
+      "status": "available",
+      "qrCodeUrl": "https://emberandash.com/table/1"
+    },
+    {
+      "_id": { "$oid": "66f4a104b7a1230004000002" },
+      "tableNumber": 2,
+      "capacity": 2,
+      "section": "Main Dining Room",
+      "status": "occupied",
+      "currentOrderId": "EA-LWP-4812",
+      "qrCodeUrl": "https://emberandash.com/table/2"
+    },
+    {
+      "_id": { "$oid": "66f4a104b7a1230004000003" },
+      "tableNumber": 3,
+      "capacity": 4,
+      "section": "Window Lounge",
+      "status": "available",
+      "qrCodeUrl": "https://emberandash.com/table/3"
+    },
+    {
+      "_id": { "$oid": "66f4a104b7a1230004000004" },
+      "tableNumber": 4,
+      "capacity": 4,
+      "section": "Window Lounge",
+      "status": "reserved",
+      "qrCodeUrl": "https://emberandash.com/table/4"
+    },
+    {
+      "_id": { "$oid": "66f4a104b7a1230004000005" },
+      "tableNumber": 5,
+      "capacity": 6,
+      "section": "Courtyard & Grill View",
+      "status": "available",
+      "qrCodeUrl": "https://emberandash.com/table/5"
+    },
+    {
+      "_id": { "$oid": "66f4a104b7a1230004000006" },
+      "tableNumber": 6,
+      "capacity": 8,
+      "section": "Private Dining Suite",
+      "status": "reserved",
+      "qrCodeUrl": "https://emberandash.com/table/6"
+    }
+  ],
+  "reservations": [
+    {
+      "_id": { "$oid": "66f4a105b7a1230005000001" },
+      "reservationCode": "RES-2026-9041",
+      "name": "Vikram Mehta",
+      "email": "vikram.mehta@example.com",
+      "phone": "+91 98201 12345",
+      "date": "2026-10-06",
+      "time": "7:30 PM",
+      "guests": 4,
+      "tableAssigned": 4,
+      "specialRequests": "Window booth preferred for anniversary celebration.",
+      "status": "confirmed",
+      "createdAt": {
+        "$date": "2026-10-05T14:20:00.000Z"
+      }
+    },
+    {
+      "_id": { "$oid": "66f4a105b7a1230005000002" },
+      "reservationCode": "RES-2026-9042",
+      "name": "Ananya Roy",
+      "email": "ananya.roy@example.com",
+      "phone": "+91 98190 67890",
+      "date": "2026-10-06",
+      "time": "8:30 PM",
+      "guests": 2,
+      "tableAssigned": null,
+      "specialRequests": "First time visiting, please seat near the live grill.",
+      "status": "confirmed",
+      "createdAt": {
+        "$date": "2026-10-06T03:15:00.000Z"
+      }
+    },
+    {
+      "_id": { "$oid": "66f4a105b7a1230005000003" },
+      "reservationCode": "RES-2026-9043",
+      "name": "Rohan Deshmukh",
+      "email": "rohan.d@example.com",
+      "phone": "+91 99200 45671",
+      "date": "2026-10-07",
+      "time": "8:00 PM",
+      "guests": 8,
+      "tableAssigned": 6,
+      "specialRequests": "Private dining setup with chef tasting recommendation.",
+      "status": "confirmed",
+      "createdAt": {
+        "$date": "2026-10-04T10:00:00.000Z"
+      }
+    }
+  ],
+  "orders": [
+    {
+      "_id": { "$oid": "66f4a106b7a1230006000001" },
+      "orderId": "EA-LWP-4812",
+      "tableNumber": 2,
+      "guestName": "Rahul Kapoor",
+      "notes": "Less spicy for the fries, extra dip please",
+      "items": [
+        {
+          "dishId": 5,
+          "name": "Flame-Grilled Half Chicken",
+          "priceNum": 690,
+          "quantity": 1
+        },
+        {
+          "dishId": 1,
+          "name": "Seasoned Crispy Fries",
+          "priceNum": 290,
+          "quantity": 2
+        },
+        {
+          "dishId": 11,
+          "name": "Paneer Tikka Platter",
+          "priceNum": 480,
+          "quantity": 1
+        }
+      ],
+      "subtotal": 1750,
+      "gst": 88,
+      "total": 1838,
+      "status": "in_making",
+      "timePlaced": "20:15",
+      "createdAt": {
+        "$date": "2026-10-06T14:45:00.000Z"
+      }
+    },
+    {
+      "_id": { "$oid": "66f4a106b7a1230006000002" },
+      "orderId": "EA-LWP-3199",
+      "tableNumber": 5,
+      "guestName": "Simran Kaur",
+      "notes": "Gluten allergy alert for the party",
+      "items": [
+        {
+          "dishId": 9,
+          "name": "Slow-Cooked Goat Curry",
+          "priceNum": 890,
+          "quantity": 2
+        },
+        {
+          "dishId": 10,
+          "name": "Grilled Goat Chops",
+          "priceNum": 980,
+          "quantity": 1
+        }
+      ],
+      "subtotal": 2760,
+      "gst": 138,
+      "total": 2898,
+      "status": "served",
+      "timePlaced": "19:30",
+      "createdAt": {
+        "$date": "2026-10-06T14:00:00.000Z"
+      }
+    }
+  ],
+  "reviews": [
+    {
+      "_id": { "$oid": "66f4a107b7a1230007000001" },
+      "reviewId": 1,
+      "name": "James Whitfield",
+      "meta": "Food Critic, The Daily Tribune",
+      "initials": "JW",
+      "stars": 5,
+      "text": "The slow-cooked goat curry was an absolute showstopper. Incredibly rich gravy and tender meat that melts in your mouth. Best goat curry I've had in years — worth every penny.",
+      "verified": true,
+      "createdAt": {
+        "$date": "2026-09-15T11:00:00.000Z"
+      }
+    },
+    {
+      "_id": { "$oid": "66f4a107b7a1230007000002" },
+      "reviewId": 2,
+      "name": "Priya Sharma",
+      "meta": "Regular Guest",
+      "initials": "PS",
+      "stars": 5,
+      "text": "Ember & Ash just gets it right. The crispy seasoned fries and flame-grilled chicken are outstanding. We come here every Friday and it never disappoints.",
+      "verified": true,
+      "createdAt": {
+        "$date": "2026-09-22T19:30:00.000Z"
+      }
+    },
+    {
+      "_id": { "$oid": "66f4a107b7a1230007000003" },
+      "reviewId": 3,
+      "name": "Marcus Collins",
+      "meta": "@marcuseats · 42k followers",
+      "initials": "MC",
+      "stars": 5,
+      "text": "The ambiance is incredible — dim lights, warm wood, the smell of the grill. Plus the buffalo wings are legitimately the best in the city. Obsessed with this place.",
+      "verified": true,
+      "createdAt": {
+        "$date": "2026-09-28T21:15:00.000Z"
+      }
+    },
+    {
+      "_id": { "$oid": "66f4a107b7a1230007000004" },
+      "reviewId": 4,
+      "name": "Sonia & Rafael Torres",
+      "meta": "Anniversary Dinner",
+      "initials": "SR",
+      "stars": 5,
+      "text": "We booked the private dining room for our anniversary and the team went above and beyond. Flowers, a custom menu, and the most attentive service I've experienced.",
+      "verified": true,
+      "createdAt": {
+        "$date": "2026-10-01T18:40:00.000Z"
+      }
+    },
+    {
+      "_id": { "$oid": "66f4a107b7a1230007000005" },
+      "reviewId": 5,
+      "name": "Derek Nguyen",
+      "meta": "Verified Guest",
+      "initials": "DN",
+      "stars": 5,
+      "text": "The smash burger changed my life. I know that sounds dramatic, but the double stack with caramelized onions and house aioli? Perfection. 10/10 every single time.",
+      "verified": true,
+      "createdAt": {
+        "$date": "2026-10-02T13:20:00.000Z"
+      }
+    },
+    {
+      "_id": { "$oid": "66f4a107b7a1230007000006" },
+      "reviewId": 6,
+      "name": "Amanda Foster",
+      "meta": "Corporate Events Host",
+      "initials": "AF",
+      "stars": 5,
+      "text": "Came for a business dinner and was honestly blown away. The craft beer selection paired with the food was outstanding. My clients left extremely impressed.",
+      "verified": true,
+      "createdAt": {
+        "$date": "2026-10-04T22:10:00.000Z"
+      }
+    }
+  ]
+}

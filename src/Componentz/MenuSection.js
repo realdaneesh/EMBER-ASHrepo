@@ -179,73 +179,133 @@ export const DISHES = [
   },
 ];
 
-const CATEGORIES = ['All', 'Starters', 'Chicken', 'Goat', 'Vegetarian'];
+const CATEGORIES = ['All', 'Starters', 'Chicken', 'Goat', 'Vegetarian', 'Beverages & Cocktails'];
 
-const DishCard = ({ dish, onOrder, itemCount = 0 }) => (
-  <article className="dish-card" id={`dish-card-${dish.id}`} aria-label={dish.name}>
-    <div className="dish-card__image-wrap">
-      <img src={dish.image} alt={dish.name} className="dish-card__image" loading="lazy" />
-      {dish.badge && <span className="dish-card__badge">{dish.badge}</span>}
-      {itemCount > 0 && (
-        <span className="dish-card__qty-pill">
-          ✓ {itemCount} in Table Order
-        </span>
-      )}
-    </div>
-    <div className="dish-card__body">
-      <div className="dish-card__top">
-        <h3 className="dish-card__name">{dish.name}</h3>
-        <span className="dish-card__price">{dish.price}</span>
+const DishCard = ({ dish, onOrder, itemCount = 0 }) => {
+  const dishId = dish.dishId || dish.id;
+  return (
+    <article className="dish-card" id={`dish-card-${dishId}`} aria-label={dish.name}>
+      <div className="dish-card__image-wrap">
+        <img src={dish.image} alt={dish.name} className="dish-card__image" loading="lazy" />
+        {dish.badge && <span className="dish-card__badge">{dish.badge}</span>}
+        {itemCount > 0 && (
+          <span className="dish-card__qty-pill">
+            ✓ {itemCount} in Table Order
+          </span>
+        )}
       </div>
-      <p className="dish-card__desc">{dish.desc}</p>
-      <div className="dish-card__ingredients">
-        {dish.ingredients.map((ing) => (
-          <span key={ing} className="ingredient-tag">{ing}</span>
-        ))}
-      </div>
-      <div className="dish-card__footer">
-        <div className="dish-card__rating">
-          <span className="dish-card__stars">{'★'.repeat(Math.round(parseFloat(dish.rating)))}</span>
-          <span>{dish.rating} ({dish.reviews})</span>
+      <div className="dish-card__body">
+        <div className="dish-card__top">
+          <h3 className="dish-card__name">{dish.name}</h3>
+          <span className="dish-card__price">{dish.price}</span>
         </div>
-        <button
-          id={`order-btn-${dish.id}`}
-          className={`dish-card__order-btn ${itemCount > 0 ? 'added' : ''}`}
-          onClick={() => onOrder(dish)}
-          aria-label={`Add ${dish.name} to table order`}
-        >
-          {itemCount > 0 ? `+ Add More (${itemCount})` : '+ Add to Order'}
-        </button>
+        <p className="dish-card__desc">{dish.desc}</p>
+        <div className="dish-card__ingredients">
+          {(dish.ingredients || []).map((ing) => (
+            <span key={ing} className="ingredient-tag">{ing}</span>
+          ))}
+        </div>
+        <div className="dish-card__footer">
+          <div className="dish-card__rating">
+            <span className="dish-card__stars">{'★'.repeat(Math.round(parseFloat(dish.rating) || 5))}</span>
+            <span>{dish.rating} ({dish.reviews})</span>
+          </div>
+          <button
+            id={`order-btn-${dishId}`}
+            className={`dish-card__order-btn ${itemCount > 0 ? 'added' : ''}`}
+            onClick={() => onOrder({ ...dish, id: dishId })}
+            aria-label={`Add ${dish.name} to table order`}
+          >
+            {itemCount > 0 ? `+ Add More (${itemCount})` : '+ Add to Order'}
+          </button>
+        </div>
       </div>
-    </div>
-  </article>
-);
+    </article>
+  );
+};
 
 const MenuSection = ({ onOrder, orderItems = [] }) => {
   const [activeCategory, setActiveCategory] = useState('All');
+  const [dishes, setDishes] = useState(DISHES);
+  const [categories, setCategories] = useState(CATEGORIES);
+  const [isLiveFromDb, setIsLiveFromDb] = useState(false);
+
+  React.useEffect(() => {
+    let isMounted = true;
+    fetch('http://localhost:5000/api/menu')
+      .then((res) => {
+        if (!res.ok) throw new Error('Network response was not ok');
+        return res.json();
+      })
+      .then((data) => {
+        if (!isMounted) return;
+        if (data.dishes && data.dishes.length > 0) {
+          const formatted = data.dishes.map((d) => ({
+            ...d,
+            id: d.dishId || d._id,
+          }));
+          setDishes(formatted);
+          setIsLiveFromDb(true);
+        }
+        if (data.categories && data.categories.length > 0) {
+          const catNames = ['All', ...data.categories.map((c) => c.name)];
+          setCategories(catNames);
+        }
+      })
+      .catch((err) => {
+        // Fallback gracefully to bundled DISHES
+        console.info('Backend API unavailable, using offline fallback menu.', err.message);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const getItemCount = (dishId) => {
-    const found = orderItems.find((it) => it.id === dishId);
+    const found = orderItems.find((it) => (it.id === dishId || it.dishId === dishId));
     return found ? found.quantity : 0;
   };
 
   const filtered = activeCategory === 'All'
-    ? DISHES
-    : DISHES.filter((d) => d.category === activeCategory);
+    ? dishes
+    : dishes.filter((d) => d.category.toLowerCase() === activeCategory.toLowerCase());
 
   return (
     <section id="menu" className="menu-section" aria-label="Our menu">
       <div className="menu-section__inner">
         <div className="menu-header">
           <div>
-            <div className="section__label">Lower Parel Dining Menu</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.35rem' }}>
+              <span className="section__label" style={{ marginBottom: 0 }}>Lower Parel Dining Menu</span>
+              {isLiveFromDb && (
+                <span
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.35rem',
+                    background: 'rgba(34, 197, 94, 0.15)',
+                    color: '#4ade80',
+                    border: '1px solid rgba(74, 222, 128, 0.3)',
+                    borderRadius: '999px',
+                    padding: '0.2rem 0.65rem',
+                    fontSize: '0.72rem',
+                    fontWeight: 600,
+                    letterSpacing: '0.04em',
+                  }}
+                >
+                  <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#4ade80' }}></span>
+                  MongoDB Atlas Live
+                </span>
+              )}
+            </div>
             <h2 className="section__title">Fresh Ingredients,<br />Live Fire Flavors</h2>
           </div>
           <nav className="menu-tabs" aria-label="Menu categories">
-            {CATEGORIES.map((cat) => (
+            {categories.map((cat) => (
               <button
                 key={cat}
-                id={`menu-tab-${cat.toLowerCase()}`}
+                id={`menu-tab-${cat.toLowerCase().replace(/[^a-z0-9]/g, '-')}`}
                 className={`menu-tab${activeCategory === cat ? ' active' : ''}`}
                 onClick={() => setActiveCategory(cat)}
                 aria-pressed={activeCategory === cat}
@@ -257,14 +317,17 @@ const MenuSection = ({ onOrder, orderItems = [] }) => {
         </div>
 
         <div className="dishes-grid">
-          {filtered.map((dish) => (
-            <DishCard
-              key={dish.id}
-              dish={dish}
-              onOrder={onOrder}
-              itemCount={getItemCount(dish.id)}
-            />
-          ))}
+          {filtered.map((dish) => {
+            const dishId = dish.dishId || dish.id;
+            return (
+              <DishCard
+                key={dishId}
+                dish={dish}
+                onOrder={onOrder}
+                itemCount={getItemCount(dishId)}
+              />
+            );
+          })}
         </div>
       </div>
     </section>

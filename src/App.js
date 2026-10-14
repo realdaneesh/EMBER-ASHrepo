@@ -75,26 +75,42 @@ function App() {
     showToast('Table order cleared');
   }, [showToast]);
 
-  // Send order to table in hotel
-  const handleSendToTable = useCallback(({ tableNumber, guestName, notes }) => {
+  // Send order to table in hotel (saves to MongoDB)
+  const handleSendToTable = useCallback(async ({ tableNumber, guestName, notes }) => {
     const subtotal = orderItems.reduce((acc, item) => acc + (item.priceNum * item.quantity), 0);
     const gst = Math.round(subtotal * 0.05);
     const grandTotal = subtotal + gst;
 
-    const orderData = {
+    const orderPayload = {
       orderId: `EA-LWP-${Math.floor(1000 + Math.random() * 9000)}`,
       tableNumber,
       guestName: guestName || 'Guest',
       notes,
       items: [...orderItems],
+      subtotal,
+      gst,
       total: grandTotal,
       timePlaced: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       status: 'in_making',
     };
 
-    setActiveOrder(orderData);
+    setActiveOrder(orderPayload);
     setOrderItems([]); // Items moved to active table order
-    showToast(`🔥 Order placed for Table #${tableNumber}! In making now.`);
+    showToast(`🔥 Order placed for Table #${tableNumber}! Saved to database.`);
+
+    try {
+      const res = await fetch('http://localhost:5000/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderPayload),
+      });
+      if (res.ok) {
+        const saved = await res.json();
+        setActiveOrder(saved);
+      }
+    } catch (e) {
+      console.warn('API server offline, order stored in local session:', e.message);
+    }
   }, [orderItems, showToast]);
 
   // Open modal for cart or active order status
@@ -112,8 +128,21 @@ function App() {
     setIsOrderModalOpen(true);
   }, []);
 
-  const handleReserve = useCallback((guestName) => {
-    showToast(`🎉 Table reserved for ${guestName}! We'll confirm by SMS & email.`);
+  const handleReserve = useCallback(async (reserveData) => {
+    const guestName = typeof reserveData === 'object' ? reserveData.name : reserveData;
+    showToast(`🎉 Table reserved for ${guestName || 'Guest'}! Saved to database.`);
+
+    if (typeof reserveData === 'object') {
+      try {
+        await fetch('http://localhost:5000/api/reservations', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(reserveData),
+        });
+      } catch (e) {
+        console.warn('API server offline, reservation stored in local session:', e.message);
+      }
+    }
   }, [showToast]);
 
   const scrollToMenu = useCallback(() => {

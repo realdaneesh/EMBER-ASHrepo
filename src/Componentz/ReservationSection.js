@@ -18,7 +18,7 @@ const ReservationSection = ({ onReserve }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onReserve(form.name || 'Guest');
+    onReserve(form);
     setForm({ name: '', email: '', phone: '', date: '', time: '', guests: '2' });
   };
 
