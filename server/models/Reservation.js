@@ -14,7 +14,12 @@ const reservationSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: ['pending', 'confirmed', 'cancelled'],
-      default: 'confirmed',
+      default: 'pending',
+    },
+    emailNotificationStatus: {
+      type: String,
+      enum: ['disabled', 'sent', 'failed', 'not_attempted'],
+      default: 'not_attempted',
     },
   },
   { timestamps: true }

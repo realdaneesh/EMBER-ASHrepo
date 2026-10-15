@@ -1,0 +1,51 @@
+# =============================================================================
+# Systemd Service Unit: Ember & Ash Backend (Node.js / Express)
+# Target OS: Amazon Linux 2023 (systemd v252+)
+# File Path on Server: /etc/systemd/system/ember-ash-backend.service
+# =============================================================================
+
+[Unit]
+Description=Ember & Ash Restaurant Backend API Service
+Documentation=https://github.com/realdaneesh/EMBER-ASHrepo
+After=network.target remote-fs.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=ec2-user
+Group=ec2-user
+WorkingDirectory=/opt/ember-ash
+
+# Environment file with secrets (mode 0600, owned by ec2-user:ec2-user)
+EnvironmentFile=/etc/ember-ash/backend.env
+Environment=NODE_ENV=production
+Environment=PORT=5000
+
+# Executable command - Node.js binary path on Amazon Linux 2023
+ExecStart=/usr/bin/node /opt/ember-ash/server/server.js
+
+# Restart policy for high availability
+Restart=always
+RestartSec=5
+KillMode=mixed
+TimeoutStopSec=15
+
+# Security hardening & process sandboxing
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+
+# Systemd native log directory management:
+# Automatically creates /var/log/ember-ash before opening file descriptors,
+# owned by ec2-user:ec2-user with mode 0755 so CloudWatch Agent has read access.
+LogsDirectory=ember-ash
+LogsDirectoryMode=0755
+
+# Standard output and error logging (streamed to dedicated files matching CloudWatch Agent config)
+StandardOutput=append:/var/log/ember-ash/backend.log
+StandardError=append:/var/log/ember-ash/backend.error.log
+SyslogIdentifier=ember-ash-backend
+
+[Install]
+WantedBy=multi-user.target
