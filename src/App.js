@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { API_BASE_URL } from './apiConfig';
 import './App.css';
 import Navbar from './Componentz/Navbar';
 import Hero from './Componentz/Hero';
@@ -99,7 +100,7 @@ function App() {
     showToast(`🔥 Order placed for Table #${tableNumber}! Saved to database.`);
 
     try {
-      const res = await fetch('http://localhost:5000/api/orders', {
+      const res = await fetch(`${API_BASE_URL}/api/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderPayload),
@@ -134,7 +135,7 @@ function App() {
 
     if (typeof reserveData === 'object') {
       try {
-        await fetch('http://localhost:5000/api/reservations', {
+        await fetch(`${API_BASE_URL}/api/reservations`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(reserveData),

@@ -7,6 +7,7 @@ const apiRoutes = require('./routes/api');
 
 // Configuration
 const PORT = parseInt(process.env.PORT, 10) || 5000;
+const HOST = process.env.HOST || '127.0.0.1';
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const MONGO_URI = process.env.MONGO_URI;
 
@@ -181,8 +182,8 @@ async function startServer() {
   }
 
   return new Promise((resolve) => {
-    serverInstance = app.listen(PORT, () => {
-      console.info(`🚀 Ember & Ash API Server listening at http://localhost:${PORT} [${NODE_ENV}]`);
+    serverInstance = app.listen(PORT, HOST, () => {
+      console.info(`🚀 Ember & Ash API Server listening at http://${HOST}:${PORT} [${NODE_ENV}]`);
       resolve(serverInstance);
     });
   });

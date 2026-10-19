@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { API_BASE_URL } from '../apiConfig';
 
 export const DISHES = [
   // ── STARTERS ──────────────────────────────────────────────────────────
@@ -232,7 +233,7 @@ const MenuSection = ({ onOrder, orderItems = [] }) => {
 
   React.useEffect(() => {
     let isMounted = true;
-    fetch('http://localhost:5000/api/menu')
+    fetch(`${API_BASE_URL}/api/menu`)
       .then((res) => {
         if (!res.ok) throw new Error('Network response was not ok');
         return res.json();

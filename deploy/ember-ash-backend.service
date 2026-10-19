@@ -14,15 +14,16 @@ Wants=network.target
 Type=simple
 User=ec2-user
 Group=ec2-user
-WorkingDirectory=/opt/ember-ash
+WorkingDirectory=/home/ec2-user/EMBER-ASHrepo
 
 # Environment file with secrets (mode 0600, owned by ec2-user:ec2-user)
 EnvironmentFile=/etc/ember-ash/backend.env
 Environment=NODE_ENV=production
 Environment=PORT=5000
+Environment=HOST=127.0.0.1
 
 # Executable command - Node.js binary path on Amazon Linux 2023
-ExecStart=/usr/bin/node /opt/ember-ash/server/server.js
+ExecStart=/usr/bin/node /home/ec2-user/EMBER-ASHrepo/server/server.js
 
 # Restart policy for high availability
 Restart=always
