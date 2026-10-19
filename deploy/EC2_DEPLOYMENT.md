@@ -199,9 +199,96 @@ sudo systemctl enable --now certbot-renew.timer
 ## 9. Verification & Health Check
 
 ```bash
-# Test local backend health
-curl -i http://127.0.0.1:5000/health
+# Test local backend health directly (loopback 127.0.0.1:5000)
+curl -i http://127.0.0.1:5000/api/health
+curl -i http://127.0.0.1:5000/api/menu
 
-# Test public HTTPS endpoint
+# Test through Nginx reverse proxy & React SPA serving (local loopback)
+curl -i http://127.0.0.1/
+curl -i http://127.0.0.1/health
+curl -i http://127.0.0.1/api/health
+curl -i http://127.0.0.1/api/menu
+curl -i http://127.0.0.1/reservation   # Tests SPA routing fallback to index.html
+
+# Test public HTTPS endpoint (when domain & SSL configured)
 curl -i https://<YOUR_DOMAIN>/health
+```
+
+---
+
+## 10. Operational Management & Rollback Runbook
+
+### Service Control Commands
+```bash
+# Backend systemd service
+sudo systemctl status ember-ash-backend
+sudo systemctl restart ember-ash-backend
+sudo systemctl stop ember-ash-backend
+
+# Nginx web server & reverse proxy
+sudo nginx -t
+sudo systemctl status nginx
+sudo systemctl reload nginx
+sudo systemctl restart nginx
+```
+
+### Log Inspection Commands
+```bash
+# Express backend application logs
+tail -n 100 -f /var/log/ember-ash/backend.log
+tail -n 100 -f /var/log/ember-ash/backend.error.log
+sudo journalctl -u ember-ash-backend -f
+
+# Nginx access and error logs
+sudo tail -n 100 -f /var/log/nginx/ember_ash_access.log
+sudo tail -n 100 -f /var/log/nginx/ember_ash_error.log
+```
+
+### Rollback Procedures
+
+#### Rollback Express Backend Code
+```bash
+# 1. Navigate to the repository
+cd /home/ec2-user/EMBER-ASHrepo
+
+# 2. Reset to the previous stable commit (e.g. HEAD~1 or specific commit hash)
+git log -n 5 --oneline
+git checkout <STABLE_COMMIT_HASH>
+
+# 3. Clean reinstall production dependencies if package-lock changed
+npm ci --omit=dev
+
+# 4. Restart backend service and verify health
+sudo systemctl restart ember-ash-backend
+curl -i http://127.0.0.1:5000/api/health
+```
+
+#### Rollback React Production Build
+```bash
+# Option A: Rebuild previous version
+cd /home/ec2-user/EMBER-ASHrepo
+npm run build
+sudo cp -r build/* /var/www/ember-ash/build/
+sudo chown -R nginx:nginx /var/www/ember-ash
+sudo chmod -R 755 /var/www/ember-ash
+
+# Option B: Restore from backup (recommended before deploying new builds)
+# When deploying: sudo cp -r /var/www/ember-ash/build /var/www/ember-ash/build.bak
+# To rollback:
+sudo rm -rf /var/www/ember-ash/build
+sudo cp -r /var/www/ember-ash/build.bak /var/www/ember-ash/build
+sudo systemctl reload nginx
+```
+
+#### Rollback Nginx Configuration
+```bash
+# If custom Nginx configuration causes failures:
+# 1. Restore the bootstrap configuration
+sudo cp /home/ec2-user/EMBER-ASHrepo/deploy/nginx.bootstrap.conf /etc/nginx/conf.d/ember-ash.conf
+
+# 2. Or restore the original Amazon Linux Nginx configuration
+sudo cp /etc/nginx/nginx.conf.bak /etc/nginx/nginx.conf
+
+# 3. Verify syntax and reload
+sudo nginx -t && sudo systemctl reload nginx
 ```
