@@ -16,6 +16,7 @@ const TableOrderModal = ({
   const [step, setStep] = useState(initialStep); // 'cart' | 'table_prompt' | 'status'
   const [tableNumber, setTableNumber] = useState(activeOrder ? activeOrder.tableNumber : '');
   const [guestName, setGuestName] = useState('');
+  const [guestEmail, setGuestEmail] = useState('');
   const [kitchenNotes, setKitchenNotes] = useState('');
   const [tableError, setTableError] = useState('');
 
@@ -54,6 +55,8 @@ const TableOrderModal = ({
     onSendToTable({
       tableNumber: String(tableNumber).trim(),
       guestName: guestName.trim() || 'Guest',
+      guestEmail: guestEmail.trim(),
+      email: guestEmail.trim(),
       notes: kitchenNotes.trim(),
     });
     setStep('status');
@@ -273,6 +276,20 @@ const TableOrderModal = ({
                     onChange={(e) => setKitchenNotes(e.target.value)}
                   />
                 </div>
+              </div>
+
+              <div className="form-group" style={{ marginTop: '0.75rem' }}>
+                <label htmlFor="guest-email-input" className="form-label">
+                  Email for Order Confirmation Receipt (Optional)
+                </label>
+                <input
+                  id="guest-email-input"
+                  type="email"
+                  className="form-input"
+                  placeholder="e.g. name@example.com (for digital receipt)"
+                  value={guestEmail}
+                  onChange={(e) => setGuestEmail(e.target.value)}
+                />
               </div>
 
               <div className="table-order-preview-box">

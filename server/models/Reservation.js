@@ -18,7 +18,7 @@ const reservationSchema = new mongoose.Schema(
     },
     emailNotificationStatus: {
       type: String,
-      enum: ['disabled', 'sent', 'failed', 'not_attempted'],
+      enum: ['disabled', 'sent', 'failed', 'skipped_sandbox', 'not_attempted'],
       default: 'not_attempted',
     },
   },

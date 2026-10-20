@@ -7,7 +7,7 @@ const Dish = require('../models/Dish');
 const Category = require('../models/Category');
 const Order = require('../models/Order');
 const Reservation = require('../models/Reservation');
-const { sendReservationAcknowledgement, maskEmail } = require('../services/email');
+const { sendReservationAcknowledgement, sendOrderConfirmation, maskEmail } = require('../services/email');
 
 // Rate limiter for write endpoints (orders & reservations)
 const isTestEnv = process.env.NODE_ENV === 'test';
@@ -98,7 +98,11 @@ router.get('/menu', async (req, res) => {
 // @desc    Create a new table order with server-side price & total validation
 router.post('/orders', writeLimiter, async (req, res) => {
   try {
-    const { tableNumber, guestName, notes, items } = req.body;
+    const { tableNumber, guestName, guestEmail, email, notes, items } = req.body;
+    const rawEmail = guestEmail || email;
+    const cleanEmail = rawEmail && typeof rawEmail === 'string' && EMAIL_REGEX.test(rawEmail.trim())
+      ? rawEmail.trim().toLowerCase().slice(0, 255)
+      : '';
 
     // Validate table number
     if (!tableNumber || typeof tableNumber !== 'string' && typeof tableNumber !== 'number') {
@@ -202,6 +206,7 @@ router.post('/orders', writeLimiter, async (req, res) => {
         orderId,
         tableNumber: cleanTable,
         guestName: guestName && typeof guestName === 'string' ? guestName.trim().slice(0, 100) : 'Guest',
+        guestEmail: cleanEmail,
         notes: notes && typeof notes === 'string' ? notes.trim().slice(0, 300) : '',
         items: verifiedItems,
         subtotal: calculatedSubtotal,
@@ -209,10 +214,38 @@ router.post('/orders', writeLimiter, async (req, res) => {
         total: verifiedTotal,
         timePlaced: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         status: 'in_making',
+        emailNotificationStatus: 'not_attempted',
       });
     });
 
-    console.info(`[Order Placed] ID: ${savedOrder.orderId} for Table ${savedOrder.tableNumber} (Total: ₹${verifiedTotal})`);
+    console.info(`[Order Placed] ID: ${savedOrder.orderId} for Table ${savedOrder.tableNumber} (Total: ₹${verifiedTotal}${cleanEmail ? `, Email: ${maskEmail(cleanEmail)}` : ''})`);
+
+    // Dispatch Amazon SES order confirmation asynchronously without blocking or reversing the order
+    if (cleanEmail) {
+      sendOrderConfirmation({
+        orderId: savedOrder.orderId,
+        tableNumber: savedOrder.tableNumber,
+        guestName: savedOrder.guestName,
+        email: cleanEmail,
+        items: savedOrder.items,
+        subtotal: savedOrder.subtotal,
+        gst: savedOrder.gst,
+        total: savedOrder.total,
+        notes: savedOrder.notes,
+        timePlaced: savedOrder.timePlaced,
+      }).then(async (emailResult) => {
+        try {
+          if (emailResult.status) {
+            savedOrder.emailNotificationStatus = emailResult.status;
+            await savedOrder.save();
+          }
+        } catch (saveErr) {
+          // Non-critical background save failure
+        }
+      }).catch((err) => {
+        console.error(`[SES Order Background Error] ${err.message}`);
+      });
+    }
 
     // Return saved order object to preserve existing frontend compatibility
     res.status(201).json(savedOrder);
@@ -318,6 +351,7 @@ router.post('/reservations', writeLimiter, async (req, res) => {
       date: saved.date,
       time: saved.time,
       guests: saved.guests,
+      specialRequests: saved.specialRequests,
     }).then(async (emailResult) => {
       try {
         if (emailResult.status) {

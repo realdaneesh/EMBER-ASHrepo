@@ -1,70 +1,74 @@
-# Getting Started with Create React App
+# 🔥 EMBER & ASH — Full-Stack Dining & Kitchen Platform
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Full-Stack Web Application for **Ember & Ash Grill & Kitchen**, located at The Mills, Lower Parel, Mumbai.
 
-## Available Scripts
+Built with a **React frontend**, **Node.js / Express backend**, **MongoDB Atlas (`ember_and_ash_db`)**, and **Amazon Simple Email Service (SES)** running on **Amazon EC2 (Region: `ap-south-1`)**.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 🛠️ Technology Stack & Architecture
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Frontend**: React 19, responsive components, table tray ordering modal, reservation form.
+- **Backend**: Node.js + Express 5, RESTful APIs, rate-limiting, and error handling.
+- **Database**: MongoDB Atlas (`ember_and_ash_db`) with Mongoose ODM models for `Dishes`, `Categories`, `Orders`, and `Reservations`.
+- **Email Service**: Amazon SES (`@aws-sdk/client-ses`) in AWS Region `ap-south-1` with verified sender `daneeshshetty@gmail.com`.
+- **Infrastructure**: Amazon EC2 with IAM Role `EmberAshEC2Role` using default credential resolution (EC2 IMDS). No hardcoded credentials.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## 📧 Amazon SES Email Notifications
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The application features centralized transactional email handling via `server/services/email.js`:
 
-### `npm run build`
+1. **Reservation Acknowledgement**: Dispatched after a reservation request is validated and saved in MongoDB.
+2. **Order Confirmation**: Dispatched with full itemization, taxes (5% GST), table destination, and special notes after an order is saved.
+3. **SES Sandbox Mode & Allowlist**:
+   - Because Amazon SES is initially in **Sandbox Mode**, emails can only be sent to verified addresses.
+   - Set `SES_SANDBOX_MODE=true` to enforce a test-recipient allowlist (`SES_ALLOWED_RECIPIENTS`).
+   - Unverified recipients are gracefully skipped (`skipped_sandbox`) without attempting AWS calls, preventing `MessageRejected` exceptions.
+   - The verified sender (`daneeshshetty@gmail.com`) and SES mailbox simulators are always automatically allowed.
+4. **Resilience & Privacy**:
+   - Deliveries are non-blocking and non-reversing: an email failure never rolls back, deletes, or duplicates an order or reservation.
+   - Recipient emails are masked in application logs (e.g. `d***h@gmail.com`).
+   - Email templates strictly exclude database credentials, connection strings, and payment information.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+See [deploy/SES_SETUP.md](deploy/SES_SETUP.md) for complete AWS SES identity setup, IAM policies, and sandbox graduation steps.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🚀 Available Scripts
 
-### `npm run eject`
+### Development & Running Locally
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+# Install root dependencies
+npm install
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# Run backend test suite
+npm run test:backend
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+# Start backend server
+npm run server
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+# Start React frontend
+npm start
+```
 
-## Learn More
+### Environment Configuration
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Copy `.env.example` to `.env` to configure your local environment:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+cp .env.example .env
+```
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Key environment variables:
+- `PORT`: Server port (default `5000`)
+- `NODE_ENV`: Runtime environment (`development` / `production` / `test`)
+- `MONGO_URI`: MongoDB Atlas connection URI
+- `AWS_REGION`: AWS region for SES (`ap-south-1`)
+- `SES_FROM_EMAIL`: Verified sender email (`daneeshshetty@gmail.com`)
+- `SES_ENABLED`: `true` to enable email dispatch; `false` by default
+- `SES_SANDBOX_MODE`: `true` to enforce sandbox recipient allowlist
+- `SES_ALLOWED_RECIPIENTS`: Comma-separated list of test recipients allowed in sandbox
+- `ADMIN_API_KEY`: Secret key required to view `/api/orders`

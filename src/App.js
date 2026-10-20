@@ -77,7 +77,7 @@ function App() {
   }, [showToast]);
 
   // Send order to table in hotel (saves to MongoDB)
-  const handleSendToTable = useCallback(async ({ tableNumber, guestName, notes }) => {
+  const handleSendToTable = useCallback(async ({ tableNumber, guestName, guestEmail, email, notes }) => {
     const subtotal = orderItems.reduce((acc, item) => acc + (item.priceNum * item.quantity), 0);
     const gst = Math.round(subtotal * 0.05);
     const grandTotal = subtotal + gst;
@@ -86,6 +86,8 @@ function App() {
       orderId: `EA-LWP-${Math.floor(1000 + Math.random() * 9000)}`,
       tableNumber,
       guestName: guestName || 'Guest',
+      guestEmail: guestEmail || email || '',
+      email: guestEmail || email || '',
       notes,
       items: [...orderItems],
       subtotal,
